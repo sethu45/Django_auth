@@ -35,15 +35,20 @@
     </nav>
 
     <div>
-        {% if user.is_superuser %}
-            <h2>List of Users:</h2>
-            <ul>
-                {% for user in user_list %}
-                    <li>{{ user.username }}</li>
-                {% endfor %}
-            </ul>
+        {% if request.user.is_staff %}
+            <h1>Registered Users</h1>
+            <table>
+                <tr>
+                    <th>Username</th>
+                </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                </tr>
+            {% endfor %}
+            </table>
         {% else %}
-            <h2>Welcome, {{ user.username }}</h2>
+            <h1>Welcome, {{ username }}!</h1>
         {% endif %}
     </div>
 </body>

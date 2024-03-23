@@ -9,10 +9,25 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from account.api.authentication import *
 
+# def index(request):
+#     if request.user.is_authenticated:
+#         return render(request, 'home.html')  # Render home page for normal users
+#     else:
+#         return redirect('login')  # Redirect unauthenticated users to login page
 
+
+from django.contrib.auth.decorators import login_required
 def index(request):
-    return render(request, 'home.html')
-
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            # Get all registered users
+            users = Account.objects.all().order_by('username')
+            context = {'users': users}
+        else:
+            context = {'username': request.user.username}
+        return render(request, 'home.html', context)
+    else:
+        return redirect('login')
 
 def registration_view(request):
     context = {}
@@ -66,27 +81,20 @@ def login_view(request):
     return render(request, "login.html", context)
 
 
-class UserDashboardView(APIView):
-    permission_classes = [IsAuthenticated]
+# class UserDashboardView(APIView):
+#   permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-
-        if request.user.is_superuser:  # Check if user is admin
-            users = Account.objects.all()
-            serializer = RegistrationSerializer(data=request.user)
-            print(serializer)
-            data = {}
-            if serializer.is_valid():
-
-                for user in serializer.validated_data:
-                    data['user'] = user.username
-                token, _ = Token.objects.get_or_create(user=users)
-                is_expired, token = token_expire_handler(token)
-                data['token'] = token
-            # if serializer.is_valid():
-            #     data[users]
-            print(data)
-            # {'user_list': user_list}
-            return render(request, 'home.html', context=data)
-        else:
-            return Response({"message": f"Welcome, {request.user.username}"})
+#   def get(self, request):
+#     print("Dashboard view accessed.")
+#     if request.user.is_authenticated:
+#       print("User is authenticated.")
+#       if request.user.is_superuser:
+#         users = Account.objects.all()
+#         serializer = RegistrationSerializer(users, many=True)
+#         print(users)
+#         return Response(serializer.data)
+#       else:
+#         return Response({'message': f"Welcome, {request.user.username}"})
+#     else:
+#       print("User is not authenticated.")
+#       return Response(status=401)  # Unauthorized
