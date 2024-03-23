@@ -1,0 +1,28 @@
+.errorlist{
+    list-style-type: none;
+}
+
+.error-message{
+    color: #ec2334;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: justify;
+}
+.error-message ul{
+    color: #ec2334;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: justify;
+}
+
+.form-control::placeholder{
+    opacity: .5;
+}
+
+input.form-control:-ms-input-placeholder{
+    opacity: .5;
+}
+
+input.form-control::-ms-input-placeholder{
+    opacity: .5;
+}
